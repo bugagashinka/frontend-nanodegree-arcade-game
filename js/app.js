@@ -42,6 +42,38 @@ Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 // a handleInput() method.
+Player.prototype.handleInput = function(direction) {
+  if (direction == 'left') {
+    this.move({
+      x: this.x - 100,
+      y: this.y,
+    });
+  } else if (direction == 'up') {
+    this.move({
+      x: this.x,
+      y: this.y - 80,
+    });
+  } else if (direction == 'right') {
+    this.move({
+      x: this.x + 100,
+      y: this.y,
+    });
+  } else if (direction == 'down') {
+    this.move({
+      x: this.x,
+      y: this.y + 80,
+    });
+  }
+};
+
+Player.prototype.move = function move(newPos) {
+  if (newPos.x > 402 || newPos.x < 2 || newPos.y > 380 || newPos.y < 60) {
+    console.log('true');
+    return;
+  }
+  this.x = newPos.x;
+  this.y = newPos.y;
+};
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 
@@ -53,7 +85,7 @@ var allEnemies = [
   new Enemy({ x: -250, y: 230 }, 120),
 ];
 // Place the player object in a variable called player
-var player = new Player({ x: 202, y: 400 });
+var player = new Player({ x: 202, y: 380 });
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
