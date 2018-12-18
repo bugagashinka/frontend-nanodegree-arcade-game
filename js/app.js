@@ -99,6 +99,8 @@ Enemy.prototype.render = function() {
 var Player = function(startPos) {
   this.x = startPos.x;
   this.y = startPos.y;
+  this.onBridge = false;
+  this.hasKey = true;
   this.score = 0;
   this.lifes = 3;
   this.sprite = 'images/char-boy.png';
@@ -125,8 +127,6 @@ function renderLifes(col, row) {
   }
 }
 
-function showBridge() {}
-
 Player.prototype.addPoints = function() {
   const profitId = profitSprites.indexOf(profit.sprite);
   if (profitId == 0) {
@@ -138,7 +138,7 @@ Player.prototype.addPoints = function() {
   } else if (profitId == 3) {
     this.lifes++;
   } else if (profitId == 4) {
-    showBridge();
+    player.hasKey = true;
   }
   console.log(this.score);
 };
@@ -169,8 +169,17 @@ Player.prototype.handleInput = function(direction) {
 };
 
 Player.prototype.move = function move(newPos) {
+  console.log(newPos.x);
   if (newPos.x > 402 || newPos.x < 2 || newPos.y > 380 || newPos.y < 60) {
-    if (newPos.y < 60) this.reset();
+    if (this.hasKey && newPos.y < 60 && newPos.x == 202) {
+      this.x = newPos.x;
+      this.y = newPos.y;
+      this.onBridge = true;
+      return;
+    }
+    if (newPos.y < 60) {
+      this.reset();
+    }
     return;
   }
   this.x = newPos.x;

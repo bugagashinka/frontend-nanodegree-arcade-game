@@ -184,12 +184,21 @@ var Engine = (function(global) {
          * so that we get the benefits of caching these images, since
          * we're using them over and over.
          */
-
-        ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+        let img = Resources.get(rowImages[row]);
+        if (player.hasKey && row == 0 && col == 2) {
+          img = Resources.get(rowImages[1]);
+        }
+        ctx.drawImage(img, col * 101, row * 83);
       }
     }
-    renderEntities();
+    if (player.onBridge) {
+      gameOver(player.score, player.hasKey);
+    } else {
+      renderEntities();
+    }
   }
+
+  function gameOver() {}
 
   /* This function is called by the render function and is called on each game
    * tick. Its purpose is to then call the render functions you have defined
