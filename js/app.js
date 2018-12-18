@@ -35,6 +35,7 @@ function showProfit(imgs) {
   this.x = 25 + 101 * generateNum(0, 5);
   this.y = 115 + 83 * generateNum(0, 3);
 }
+//profitStartPos = {x: 101, y: 93};
 
 function generateNum(min, max) {
   return min + Math.floor(Math.random() * max);
@@ -42,10 +43,12 @@ function generateNum(min, max) {
 
 Profit.prototype.update = function(dt) {
   //if Player have score 100 points, key may appear
-  if (player.score >= 500) {
+  if (player.score >= 500 && profitSprites.length < 5) {
     profitSprites.splice(3, 0, 'images/Key.png');
   }
-  showProfit.call(this, profitSprites);
+  if (!player.hasKey) {
+    showProfit.call(this, profitSprites);
+  }
 };
 
 Profit.prototype.render = function() {
@@ -100,8 +103,8 @@ var Player = function(startPos) {
   this.x = startPos.x;
   this.y = startPos.y;
   this.onBridge = false;
-  this.hasKey = true;
-  this.score = 0;
+  this.hasKey = false;
+  this.score = 450;
   this.lifes = 3;
   this.sprite = 'images/char-boy.png';
 };
@@ -135,9 +138,10 @@ Player.prototype.addPoints = function() {
     this.score += 25;
   } else if (profitId == 2) {
     this.score += 50;
-  } else if (profitId == 3) {
+  } else if (profitId == profitSprites.length - 1) {
+    //life sprite always has last array index
     this.lifes++;
-  } else if (profitId == 4) {
+  } else if (profitId == 3) {
     player.hasKey = true;
   }
   console.log(this.score);
@@ -169,7 +173,6 @@ Player.prototype.handleInput = function(direction) {
 };
 
 Player.prototype.move = function move(newPos) {
-  console.log(newPos.x);
   if (newPos.x > 402 || newPos.x < 2 || newPos.y > 380 || newPos.y < 60) {
     if (this.hasKey && newPos.y < 60 && newPos.x == 202) {
       this.x = newPos.x;
@@ -197,10 +200,9 @@ Player.prototype.reset = function() {
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [
     new Enemy({ x: 0, y: 55 }, 80),
-    //new Enemy({ x: 0, y: 145 }, 100),
-    //new Enemy({ x: 0, y: 230 }, 140),
-    //new Enemy({ x: -250, y: 55 }, 80),
-    //new Enemy({ x: -250, y: 230 }, 120),
+    new Enemy({ x: 0, y: 145 }, 100),
+    new Enemy({ x: -250, y: 55 }, 80),
+    new Enemy({ x: -250, y: 230 }, 120),
   ],
   // Place the player object in a variable called player
   player = new Player(playerStartPos),

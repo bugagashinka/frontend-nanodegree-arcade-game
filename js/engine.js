@@ -198,7 +198,30 @@ var Engine = (function(global) {
     }
   }
 
-  function gameOver() {}
+  function gameOver(playerScore, hasKey) {
+    var text = `Congratulations, You Won!\n Your Score: ${playerScore}`,
+      lineHeight = 50,
+      fontSize = 40,
+      lines = null;
+
+    if (!hasKey) {
+      fontSize = 50;
+      text = `Game over!\n Your Score: ${playerScore}`;
+      lineHeight = 60;
+    }
+    lines = text.split('\n');
+    ctx.font = `${fontSize}px Comic Sans MS`;
+    ctx.fillStyle = 'red';
+    ctx.textAlign = 'center';
+
+    for (var i = 0; i < lines.length; i++) {
+      ctx.fillText(
+        lines[i],
+        canvas.width / 2,
+        canvas.height / 2 + i * lineHeight,
+      );
+    }
+  }
 
   /* This function is called by the render function and is called on each game
    * tick. Its purpose is to then call the render functions you have defined
