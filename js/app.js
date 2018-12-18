@@ -1,4 +1,56 @@
 const playerStartPos = { x: 202, y: 380 };
+
+var Profit = function(img) {
+  this.show = false;
+  this.x = -50;
+  this.y = 0;
+  this.lifeTime = generateNum(2, 4);
+  this.sprite = null;
+};
+
+function showProfit(imgs) {
+  if (this.show) return;
+
+  this.show = true;
+
+  var imgScope = imgs.length - 1;
+  if (player.lifes < 3) {
+    imgScope++;
+  }
+  imgIndx = generateNum(0, imgScope);
+  this.sprite = imgs[imgIndx];
+
+  setTimeout(() => {
+    this.lifeTime = generateNum(2, 4);
+    this.show = false;
+  }, this.lifeTime * 1000);
+
+  this.x = 25 + 101 * generateNum(0, 5);
+  this.y = 115 + 83 * generateNum(0, 3);
+}
+
+function generateNum(min, max) {
+  return min + Math.floor(Math.random() * max);
+}
+
+Profit.prototype.update = function(dt) {
+  var imgs = [
+    'images/Gem Orange.png',
+    'images/Gem Blue.png',
+    'images/Gem Green.png',
+    'images/Heart.png',
+  ];
+  //if Player have score 100 points, key may appear
+  if (player.score >= 100) {
+    imgs.splice(3, 0, 'images/Key.png');
+  }
+  showProfit.call(this, imgs);
+};
+
+Profit.prototype.render = function() {
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 50, 85);
+};
+
 // Enemies our player must avoid
 var Enemy = function(startPos, speed) {
   // Variables applied to each of our instances go here,
@@ -38,6 +90,7 @@ Enemy.prototype.render = function() {
 var Player = function(startPos) {
   this.x = startPos.x;
   this.y = startPos.y;
+  this.score = 100;
   this.lifes = 3;
   this.sprite = 'images/char-boy.png';
 };
@@ -107,14 +160,15 @@ Player.prototype.reset = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [
-  new Enemy({ x: 0, y: 55 }, 80),
-  //new Enemy({ x: 0, y: 145 }, 100),
-  //new Enemy({ x: 0, y: 230 }, 140),
-  //new Enemy({ x: -250, y: 55 }, 80),
-  //new Enemy({ x: -250, y: 230 }, 120),
-];
-// Place the player object in a variable called player
-var player = new Player(playerStartPos);
+    new Enemy({ x: 0, y: 55 }, 80),
+    //new Enemy({ x: 0, y: 145 }, 100),
+    //new Enemy({ x: 0, y: 230 }, 140),
+    //new Enemy({ x: -250, y: 55 }, 80),
+    //new Enemy({ x: -250, y: 230 }, 120),
+  ],
+  // Place the player object in a variable called player
+  player = new Player(playerStartPos),
+  profit = new Profit();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
