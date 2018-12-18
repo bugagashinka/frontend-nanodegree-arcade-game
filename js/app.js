@@ -26,6 +26,12 @@ Enemy.prototype.update = function(dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  ctx.strokeRect(
+    this.x,
+    this.y + 80,
+    Resources.get(this.sprite).width,
+    Resources.get(this.sprite).height - 110,
+  );
 };
 
 // Now write your own player class
@@ -41,6 +47,12 @@ Player.prototype.update = function(dt) {
 };
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  ctx.strokeRect(
+    this.x + 15,
+    this.y + 85,
+    Resources.get(this.sprite).width - 30,
+    Resources.get(this.sprite).height - 120,
+  );
 };
 // a handleInput() method.
 Player.prototype.handleInput = function(direction) {
