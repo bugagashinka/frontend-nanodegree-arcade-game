@@ -1,10 +1,20 @@
+const ONE_SECOND = 1000;
+const GAME_OUT_SCORE = 500;
+const PLAYER_MAX_LIFE = 3;
+
+const enemyRespawnX = -100;
 const playerStartPos = { x: 202, y: 380 };
+const profitStartPos = { x: 25, y: 115 };
+const profitStep = { x: 101, y: 83 };
+
 const profitSprites = [
   'images/Gem Green.png',
   'images/Gem Blue.png',
   'images/Gem Orange.png',
   'images/Heart.png',
 ];
+
+//=========================== Profit class ====================================
 
 var Profit = function(img) {
   this.isGrabbed = false;
@@ -20,7 +30,7 @@ function showProfit(imgs) {
   this.show = true;
 
   var imgScope = imgs.length - 1;
-  if (player.lifes < 3) {
+  if (player.lifes < PLAYER_MAX_LIFE) {
     imgScope++;
   }
   imgIndx = generateNum(0, imgScope);
@@ -30,20 +40,15 @@ function showProfit(imgs) {
     this.lifeTime = generateNum(2, 4);
     this.show = false;
     this.isGrabbed = false;
-  }, this.lifeTime * 1000);
+  }, this.lifeTime * ONE_SECOND);
 
-  this.x = 25 + 101 * generateNum(0, 5);
-  this.y = 115 + 83 * generateNum(0, 3);
-}
-//profitStartPos = {x: 101, y: 93};
-
-function generateNum(min, max) {
-  return min + Math.floor(Math.random() * max);
+  this.x = profitStartPos.x + profitStep.x * generateNum(0, 5);
+  this.y = profitStartPos.y + profitStep.y * generateNum(0, 3);
 }
 
 Profit.prototype.update = function(dt) {
   //if Player have score 100 points, key may appear
-  if (player.score >= 500 && profitSprites.length < 5) {
+  if (player.score >= GAME_OUT_SCORE && profitSprites.length < 5) {
     profitSprites.splice(3, 0, 'images/Key.png');
   }
   if (!player.hasKey) {
@@ -63,6 +68,7 @@ Profit.prototype.render = function() {
   }
 };
 
+//=========================== Enemy class ====================================
 // Enemies our player must avoid
 var Enemy = function(startPos, speed) {
   // Variables applied to each of our instances go here,
@@ -83,7 +89,7 @@ Enemy.prototype.update = function(dt) {
   // all computers.
   this.x += this.speed * dt;
   if (this.x > ctx.canvas.width) {
-    this.x = -100;
+    this.x = enemyRespawnX;
   }
 };
 
@@ -98,21 +104,25 @@ Enemy.prototype.render = function() {
   );
 };
 
+//=========================== Player class ====================================
+
 // Now write your own player class
 var Player = function(startPos) {
   this.x = startPos.x;
   this.y = startPos.y;
   this.onBridge = false;
   this.hasKey = false;
-  this.score = 450;
-  this.lifes = 3;
+  this.score = 0;
+  this.lifes = PLAYER_MAX_LIFE;
   this.sprite = 'images/char-boy.png';
 };
+
 // This class requires an update(), render() and
 Player.prototype.update = function(dt) {
   this.x = this.x;
   this.y = this.y;
 };
+
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   ctx.strokeRect(
@@ -121,14 +131,14 @@ Player.prototype.render = function() {
     Resources.get(this.sprite).width - 30,
     Resources.get(this.sprite).height - 120,
   );
-  renderLifes();
+  this.renderLifes();
 };
 
-function renderLifes(col, row) {
+Player.prototype.renderLifes = function(col, row) {
   for (var i = player.lifes; i > 0; i--) {
     ctx.drawImage(Resources.get('images/Heart.png'), 475 - i * 20, 30, 50, 85);
   }
-}
+};
 
 Player.prototype.addPoints = function() {
   const profitId = profitSprites.indexOf(profit.sprite);
@@ -196,6 +206,7 @@ Player.prototype.reset = function() {
   this.y = playerStartPos.y;
 };
 
+//=========================== General ====================================
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [
@@ -220,3 +231,7 @@ document.addEventListener('keyup', function(e) {
 
   player.handleInput(allowedKeys[e.keyCode]);
 });
+
+function generateNum(min, max) {
+  return min + Math.floor(Math.random() * max);
+}
