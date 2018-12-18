@@ -38,6 +38,7 @@ Enemy.prototype.render = function() {
 var Player = function(startPos) {
   this.x = startPos.x;
   this.y = startPos.y;
+  this.lifes = 3;
   this.sprite = 'images/char-boy.png';
 };
 // This class requires an update(), render() and
@@ -53,7 +54,15 @@ Player.prototype.render = function() {
     Resources.get(this.sprite).width - 30,
     Resources.get(this.sprite).height - 120,
   );
+  renderLifes();
 };
+
+function renderLifes(col, row) {
+  for (var i = player.lifes; i > 0; i--) {
+    ctx.drawImage(Resources.get('images/Heart.png'), 475 - i * 20, 30, 50, 85);
+  }
+}
+
 // a handleInput() method.
 Player.prototype.handleInput = function(direction) {
   if (direction == 'left') {
@@ -90,6 +99,7 @@ Player.prototype.move = function move(newPos) {
 
 //Reset Player to initial position
 Player.prototype.reset = function() {
+  this.lifes--;
   this.x = playerStartPos.x;
   this.y = playerStartPos.y;
 };
@@ -98,10 +108,10 @@ Player.prototype.reset = function() {
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [
   new Enemy({ x: 0, y: 55 }, 80),
-  new Enemy({ x: 0, y: 145 }, 100),
-  new Enemy({ x: 0, y: 230 }, 140),
-  new Enemy({ x: -250, y: 55 }, 80),
-  new Enemy({ x: -250, y: 230 }, 120),
+  //new Enemy({ x: 0, y: 145 }, 100),
+  //new Enemy({ x: 0, y: 230 }, 140),
+  //new Enemy({ x: -250, y: 55 }, 80),
+  //new Enemy({ x: -250, y: 230 }, 120),
 ];
 // Place the player object in a variable called player
 var player = new Player(playerStartPos);
