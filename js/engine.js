@@ -82,29 +82,52 @@ var Engine = (function(global) {
     checkCollisions();
   }
 
-  function checkCollisions() {
+  function playerVsEnemy(playerBox) {
     allEnemies.forEach(function(enemy) {
       let enemyBox = {
-          x: enemy.x,
-          y: enemy.y + 80,
-          width: enemy.x + Resources.get(enemy.sprite).width,
-          height: enemy.y + 80 + Resources.get(enemy.sprite).height - 110,
-        },
-        playerBox = {
-          x: player.x + 15,
-          y: player.y + 85,
-          width: player.x + 15 + Resources.get(player.sprite).width - 30,
-          height: player.y + 85 + Resources.get(player.sprite).height - 120,
-        };
-      if (
-        playerBox.x <= enemyBox.width &&
-        playerBox.width >= enemyBox.x &&
-        playerBox.y <= enemyBox.height &&
-        playerBox.height >= enemyBox.y
-      ) {
+        x: enemy.x,
+        y: enemy.y + 80,
+        width: enemy.x + Resources.get(enemy.sprite).width,
+        height: enemy.y + 80 + Resources.get(enemy.sprite).height - 110,
+      };
+
+      if (check(playerBox, enemyBox)) {
         player.reset();
       }
     });
+  }
+
+  function playerVsProfit(playerBox, profitBox) {
+    if (check(playerBox, profitBox) && !profit.isGrabbed) {
+      profit.isGrabbed = true;
+      player.addPoints();
+    }
+  }
+
+  function check(box1, box2) {
+    return (
+      box1.x <= box2.width &&
+      box1.width >= box2.x &&
+      box1.y <= box2.height &&
+      box1.height >= box2.y
+    );
+  }
+
+  function checkCollisions() {
+    let playerBox = {
+        x: player.x + 15,
+        y: player.y + 85,
+        width: player.x + 15 + Resources.get(player.sprite).width - 30,
+        height: player.y + 85 + Resources.get(player.sprite).height - 120,
+      },
+      profitBox = {
+        x: profit.x,
+        y: profit.y + 25,
+        width: profit.x + Resources.get(profit.sprite).width - 51,
+        height: profit.y + Resources.get(profit.sprite).height - 112,
+      };
+    playerVsEnemy(playerBox);
+    playerVsProfit(playerBox, profitBox);
   }
 
   /* This is called by the update function and loops through all of the

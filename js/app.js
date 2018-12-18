@@ -1,6 +1,13 @@
 const playerStartPos = { x: 202, y: 380 };
+const profitSprites = [
+  'images/Gem Green.png',
+  'images/Gem Blue.png',
+  'images/Gem Orange.png',
+  'images/Heart.png',
+];
 
 var Profit = function(img) {
+  this.isGrabbed = false;
   this.show = false;
   this.x = -50;
   this.y = 0;
@@ -10,7 +17,6 @@ var Profit = function(img) {
 
 function showProfit(imgs) {
   if (this.show) return;
-
   this.show = true;
 
   var imgScope = imgs.length - 1;
@@ -23,6 +29,7 @@ function showProfit(imgs) {
   setTimeout(() => {
     this.lifeTime = generateNum(2, 4);
     this.show = false;
+    this.isGrabbed = false;
   }, this.lifeTime * 1000);
 
   this.x = 25 + 101 * generateNum(0, 5);
@@ -34,21 +41,23 @@ function generateNum(min, max) {
 }
 
 Profit.prototype.update = function(dt) {
-  var imgs = [
-    'images/Gem Orange.png',
-    'images/Gem Blue.png',
-    'images/Gem Green.png',
-    'images/Heart.png',
-  ];
   //if Player have score 100 points, key may appear
-  if (player.score >= 100) {
-    imgs.splice(3, 0, 'images/Key.png');
+  if (player.score >= 500) {
+    profitSprites.splice(3, 0, 'images/Key.png');
   }
-  showProfit.call(this, imgs);
+  showProfit.call(this, profitSprites);
 };
 
 Profit.prototype.render = function() {
-  ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 50, 85);
+  if (!this.isGrabbed) {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 50, 85);
+    ctx.strokeRect(
+      this.x,
+      this.y + 25,
+      Resources.get(this.sprite).width - 51,
+      Resources.get(this.sprite).height - 112,
+    );
+  }
 };
 
 // Enemies our player must avoid
@@ -90,7 +99,7 @@ Enemy.prototype.render = function() {
 var Player = function(startPos) {
   this.x = startPos.x;
   this.y = startPos.y;
-  this.score = 100;
+  this.score = 0;
   this.lifes = 3;
   this.sprite = 'images/char-boy.png';
 };
@@ -115,6 +124,24 @@ function renderLifes(col, row) {
     ctx.drawImage(Resources.get('images/Heart.png'), 475 - i * 20, 30, 50, 85);
   }
 }
+
+function showBridge() {}
+
+Player.prototype.addPoints = function() {
+  const profitId = profitSprites.indexOf(profit.sprite);
+  if (profitId == 0) {
+    this.score += 10;
+  } else if (profitId == 1) {
+    this.score += 25;
+  } else if (profitId == 2) {
+    this.score += 50;
+  } else if (profitId == 3) {
+    this.lifes++;
+  } else if (profitId == 4) {
+    showBridge();
+  }
+  console.log(this.score);
+};
 
 // a handleInput() method.
 Player.prototype.handleInput = function(direction) {
