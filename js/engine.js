@@ -216,8 +216,9 @@ var Engine = (function(global) {
   }
 
   function gameOver(playerScore, hasKey) {
-    var text = `Congratulations, You Won!\n Your Score: ${playerScore}`;
-    fontSize = 40;
+    var text = `Congratulations, You Won!\n Your Score: ${playerScore}`,
+      fontSize = 40,
+      lineHeight = 50;
 
     if (!hasKey) {
       text = `Game over!\n Your Score: ${playerScore}`;
