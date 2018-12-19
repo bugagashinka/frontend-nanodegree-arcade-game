@@ -115,9 +115,9 @@ var Engine = (function(global) {
 
   function checkCollisions() {
     let playerBox = {
-        x: player.x + 15,
+        x: player.x + 25,
         y: player.y + 85,
-        width: player.x + 15 + Resources.get(player.sprite).width - 30,
+        width: player.x + 15 + Resources.get(player.sprite).width - 50,
         height: player.y + 85 + Resources.get(player.sprite).height - 120,
       },
       profitBox = {
@@ -225,7 +225,13 @@ var Engine = (function(global) {
       fontSize = 50;
       lineHeight = 60;
     }
-    drawText(text, canvas.width / 2, canvas.height / 2, fontSize, lineHeight);
+    drawText(
+      text,
+      canvas.width / 2,
+      canvas.height / 2 - 100,
+      fontSize,
+      lineHeight,
+    );
   }
 
   /* This function is called by the render function and is called on each game

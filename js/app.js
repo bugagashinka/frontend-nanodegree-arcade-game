@@ -67,12 +67,6 @@ Profit.prototype.update = function(dt) {
 Profit.prototype.render = function() {
   if (!this.isGrabbed) {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 50, 85);
-    ctx.strokeRect(
-      this.x,
-      this.y + 25,
-      Resources.get(this.sprite).width - 51,
-      Resources.get(this.sprite).height - 112,
-    );
   }
 };
 
@@ -104,12 +98,6 @@ Enemy.prototype.update = function(dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-  ctx.strokeRect(
-    this.x,
-    this.y + 80,
-    Resources.get(this.sprite).width,
-    Resources.get(this.sprite).height - 110,
-  );
 };
 
 //=========================== Player class ====================================
@@ -133,12 +121,6 @@ Player.prototype.update = function(dt) {
 
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-  ctx.strokeRect(
-    this.x + 25,
-    this.y + 85,
-    Resources.get(this.sprite).width - 50,
-    Resources.get(this.sprite).height - 120,
-  );
   this.renderLifes();
 };
 
