@@ -195,32 +195,35 @@ var Engine = (function(global) {
       gameOver(player.score, player.hasKey);
     } else {
       renderEntities();
+      showScore(player.score);
     }
   }
 
-  function gameOver(playerScore, hasKey) {
-    var text = `Congratulations, You Won!\n Your Score: ${playerScore}`,
-      lineHeight = 50,
-      fontSize = 40,
-      lines = null;
+  function showScore(playerScore) {
+    drawText(`Score: ${playerScore}`, 90, 85, 30);
+  }
 
-    if (!hasKey) {
-      fontSize = 50;
-      text = `Game over!\n Your Score: ${playerScore}`;
-      lineHeight = 60;
-    }
-    lines = text.split('\n');
+  function drawText(text, posX, posY, fontSize = 40, lineHeight = 50) {
+    var lines = text.split('\n');
     ctx.font = `${fontSize}px Comic Sans MS`;
     ctx.fillStyle = 'red';
     ctx.textAlign = 'center';
 
     for (var i = 0; i < lines.length; i++) {
-      ctx.fillText(
-        lines[i],
-        canvas.width / 2,
-        canvas.height / 2 + i * lineHeight,
-      );
+      ctx.fillText(lines[i], posX, posY + i * lineHeight);
     }
+  }
+
+  function gameOver(playerScore, hasKey) {
+    var text = `Congratulations, You Won!\n Your Score: ${playerScore}`;
+    fontSize = 40;
+
+    if (!hasKey) {
+      text = `Game over!\n Your Score: ${playerScore}`;
+      fontSize = 50;
+      lineHeight = 60;
+    }
+    drawText(text, canvas.width / 2, canvas.height / 2, fontSize, lineHeight);
   }
 
   /* This function is called by the render function and is called on each game

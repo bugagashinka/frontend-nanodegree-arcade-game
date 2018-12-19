@@ -3,7 +3,9 @@ const GAME_OUT_SCORE = 500;
 const PLAYER_MAX_LIFE = 3;
 
 const enemyRespawnX = -100;
+
 const playerStartPos = { x: 202, y: 380 };
+
 const profitStartPos = { x: 25, y: 115 };
 const profitStep = { x: 101, y: 83 };
 
@@ -126,9 +128,9 @@ Player.prototype.update = function(dt) {
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   ctx.strokeRect(
-    this.x + 15,
+    this.x + 25,
     this.y + 85,
-    Resources.get(this.sprite).width - 30,
+    Resources.get(this.sprite).width - 50,
     Resources.get(this.sprite).height - 120,
   );
   this.renderLifes();
@@ -154,7 +156,6 @@ Player.prototype.addPoints = function() {
   } else if (profitId == 3) {
     player.hasKey = true;
   }
-  console.log(this.score);
 };
 
 // a handleInput() method.
