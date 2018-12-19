@@ -50,12 +50,18 @@ function showProfit(imgs) {
 
 Profit.prototype.update = function(dt) {
   //if Player have score 100 points, key may appear
-  if (player.score >= GAME_OUT_SCORE && profitSprites.length < 5) {
+  if (
+    !player.hasKey &&
+    player.score >= GAME_OUT_SCORE &&
+    profitSprites.length < 5
+  ) {
     profitSprites.splice(3, 0, 'images/Key.png');
   }
-  if (!player.hasKey) {
-    showProfit.call(this, profitSprites);
+  if (player.hasKey && profitSprites.length == 5) {
+    profitSprites.splice(3, 1);
   }
+
+  showProfit.call(this, profitSprites);
 };
 
 Profit.prototype.render = function() {
