@@ -2,8 +2,27 @@
 
 ## Table of Contents
 
+- [How run](#how run)
+- [How play](#how run)
 - [Instructions](#instructions)
 - [Contributing](#contributing)
+
+##How run
+For start open in browser 'index.html file';
+F5 - restart game.
+
+##How play
+Character should collect at least 500 point for the appearance of the {key}.
+{Key} - opens the bridge over the water.
+
+Bright gems also known as profit have next point price:
+{Green} - 10
+{Blue} - 25
+{Yellow} - 50
+{Heart} - +1 life (max = 3)
+
+Ladybugs and water are Your evil enemies it's , decide to face with them and you lost -1 life.
+Good luck!!!
 
 ## Instructions
 
