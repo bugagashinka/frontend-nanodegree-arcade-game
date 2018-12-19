@@ -185,13 +185,14 @@ var Engine = (function(global) {
          * we're using them over and over.
          */
         let img = Resources.get(rowImages[row]);
+
         if (player.hasKey && row == 0 && col == 2) {
           img = Resources.get(rowImages[1]);
         }
         ctx.drawImage(img, col * 101, row * 83);
       }
     }
-    if (player.onBridge) {
+    if (player.onBridge || player.lifes <= 0) {
       gameOver(player.score, player.hasKey);
     } else {
       renderEntities();
