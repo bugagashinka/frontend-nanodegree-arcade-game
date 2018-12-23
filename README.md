@@ -18,15 +18,15 @@ Character should collect at least 500 point for the appearance of the <img src="
 
 **Bright gems also known as profit have next point price**:
 <br>
-<img src="images/Gem Blue.png" width="60"> - 10 pt
+<img src="images/Gem Blue.png" width="30"> - 10 pt
 <br>
-<img src="images/Gem Green.png" width="60"> - 25 pt
+<img src="images/Gem Green.png" width="30"> - 25 pt
 <br>
-<img src="images/Gem Orange.png" width="60"> - 50 pt
+<img src="images/Gem Orange.png" width="30"> - 50 pt
 <br>
-<img src="images/Heart.png" width="60"> - +1 life (max = 3)
+<img src="images/Heart.png" width="30"> - +1 life (max = 3)
 
-Ladybugs <img src="images/enemy-bug.png" width="60"> and water <img src="images/water-block.png" width="60"> are Your evil enemies, decide to face with them and you lost -1 life.
+Ladybugs <img src="images/enemy-bug.png" width="50"> and water <img src="images/water-block.png" width="50"> are Your evil enemies, decide to face with them and you lost -1 life.
 <br>
 **Good luck!!!**
 
