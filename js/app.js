@@ -24,7 +24,18 @@ var Profit = function(img) {
   this.x = -50;
   this.y = 0;
   this.lifeTime = generateNum(2, 4);
-  this.sprite = null;
+  //default profit sprite
+  this.sprite = 'images/Gem Green.png';
+  Object.defineProperty(this, 'body', {
+    get: function() {
+      return {
+        x: this.x,
+        y: this.y + 25,
+        width: this.x + Resources.get(this.sprite).width - 51,
+        height: this.y + Resources.get(this.sprite).height - 112,
+      };
+    },
+  });
 };
 
 Profit.prototype.showProfit = function(imgs) {
@@ -81,6 +92,17 @@ var Enemy = function(startPos, speed) {
   // The image/sprite for our enemies, this uses
   // a helper we've provided to easily load images
   this.sprite = 'images/enemy-bug.png';
+  console.log(Resources.get(this.sprite));
+  Object.defineProperty(this, 'body', {
+    get: function() {
+      return {
+        x: this.x,
+        y: this.y + 80,
+        width: this.x + Resources.get(this.sprite).width,
+        height: this.y + 80 + Resources.get(this.sprite).height - 110,
+      };
+    },
+  });
 };
 
 // Update the enemy's position, required method for game
@@ -111,6 +133,16 @@ var Player = function(startPos) {
   this.score = 0;
   this.lifes = PLAYER_MAX_LIFE;
   this.sprite = 'images/char-boy.png';
+  Object.defineProperty(this, 'body', {
+    get: function() {
+      return {
+        x: this.x + 25,
+        y: this.y + 85,
+        width: this.x + 15 + Resources.get(this.sprite).width - 50,
+        height: this.y + 85 + Resources.get(this.sprite).height - 120,
+      };
+    },
+  });
 };
 
 // This class requires an update(), render() and
@@ -118,6 +150,33 @@ Player.prototype.update = function(dt) {
   this.x = this.x;
   this.y = this.y;
 };
+
+Player.prototype.checkCollisions = function() {
+  let player = this;
+  let allEntities = allEnemies.concat(allProfits);
+
+  allEntities.forEach(entity => {
+    if (entity instanceof Enemy) {
+      if (check(player.body, entity.body)) {
+        player.reset();
+      }
+    } else if (entity instanceof Profit) {
+      if (check(player.body, entity.body) && !entity.isGrabbed) {
+        entity.isGrabbed = true;
+        player.addPoints();
+      }
+    }
+  });
+};
+
+function check(playerBody, objectBody) {
+  return (
+    playerBody.x <= objectBody.width &&
+    playerBody.width >= objectBody.x &&
+    playerBody.y <= objectBody.height &&
+    playerBody.height >= objectBody.y
+  );
+}
 
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -131,19 +190,23 @@ Player.prototype.renderLifes = function(col, row) {
 };
 
 Player.prototype.addPoints = function() {
-  const profitId = profitSprites.indexOf(profit.sprite);
-  if (profitId == 0) {
-    this.score += 10;
-  } else if (profitId == 1) {
-    this.score += 25;
-  } else if (profitId == 2) {
-    this.score += 50;
-  } else if (profitId == profitSprites.length - 1) {
-    //life sprite always has last array index
-    this.lifes++;
-  } else if (profitId == 3) {
-    player.hasKey = true;
+  function _addPoints(player, profit) {
+    const profitId = profitSprites.indexOf(profit.sprite);
+    if (profitId == 0) {
+      player.score += 10;
+    } else if (profitId == 1) {
+      player.score += 25;
+    } else if (profitId == 2) {
+      player.score += 50;
+    } else if (profitId == profitSprites.length - 1) {
+      //life sprite always has last array index
+      player.lifes++;
+    } else if (profitId == 3) {
+      player.hasKey = true;
+    }
   }
+  let self = this;
+  allProfits.forEach(profit => _addPoints(self, profit));
 };
 
 // a handleInput() method.
@@ -198,15 +261,21 @@ Player.prototype.reset = function() {
 //=========================== General ====================================
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
-var allEnemies = [
+
+var allEnemies, allProfits, player;
+
+function createChars() {
+  allEnemies = [
     new Enemy({ x: 0, y: 55 }, 80),
     new Enemy({ x: 0, y: 145 }, 100),
     new Enemy({ x: -250, y: 55 }, 80),
     new Enemy({ x: -250, y: 230 }, 120),
-  ],
+  ];
+  allProfits = [new Profit()];
+
   // Place the player object in a variable called player
-  player = new Player(playerStartPos),
-  profit = new Profit();
+  player = new Player(playerStartPos);
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
