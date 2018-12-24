@@ -27,7 +27,7 @@ var Profit = function(img) {
   this.sprite = null;
 };
 
-function showProfit(imgs) {
+Profit.prototype.showProfit = function(imgs) {
   if (this.show) return;
   this.show = true;
 
@@ -46,7 +46,7 @@ function showProfit(imgs) {
 
   this.x = profitStartPos.x + profitStep.x * generateNum(0, 5);
   this.y = profitStartPos.y + profitStep.y * generateNum(0, 3);
-}
+};
 
 Profit.prototype.update = function(dt) {
   //if Player have score 100 points, key may appear
@@ -61,7 +61,7 @@ Profit.prototype.update = function(dt) {
     profitSprites.splice(3, 1);
   }
 
-  showProfit.call(this, profitSprites);
+  this.showProfit(profitSprites);
 };
 
 Profit.prototype.render = function() {
