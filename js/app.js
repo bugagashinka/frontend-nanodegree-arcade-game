@@ -38,16 +38,14 @@ var Profit = function(img) {
   });
 };
 
-Profit.prototype.showProfit = function(imgs) {
+Profit.prototype.showProfit = function(sprites, scope) {
+  var id;
+
   if (this.show) return;
   this.show = true;
 
-  var imgScope = imgs.length - 1;
-  if (player.lifes < PLAYER_MAX_LIFE) {
-    imgScope++;
-  }
-  imgIndx = generateNum(0, imgScope);
-  this.sprite = imgs[imgIndx];
+  id = generateNum(0, scope);
+  this.sprite = sprites[id];
 
   setTimeout(() => {
     this.lifeTime = generateNum(2, 4);
@@ -59,20 +57,28 @@ Profit.prototype.showProfit = function(imgs) {
   this.y = profitStartPos.y + profitStep.y * generateNum(0, 3);
 };
 
+// function(imgs, imgsScope) {}
+
 Profit.prototype.update = function(dt) {
+  var scope;
   //if Player have score 100 points, key may appear
   if (
-    !player.hasKey &&
-    player.score >= GAME_OUT_SCORE &&
+    !hasPlayerKey() &&
+    getPlayerScore() >= GAME_OUT_SCORE &&
     profitSprites.length < 5
   ) {
     profitSprites.splice(3, 0, 'images/Key.png');
   }
-  if (player.hasKey && profitSprites.length == 5) {
+  if (hasPlayerKey() && profitSprites.length == 5) {
     profitSprites.splice(3, 1);
   }
 
-  this.showProfit(profitSprites);
+  scope = profitSprites.length - 1;
+  if (getPlayerHealth() < PLAYER_MAX_LIFE) {
+    scope++;
+  }
+
+  this.showProfit(profitSprites, scope);
 };
 
 Profit.prototype.render = function() {
@@ -152,18 +158,18 @@ Player.prototype.update = function(dt) {
 };
 
 Player.prototype.checkCollisions = function() {
-  let player = this;
+  let that = this;
   let allEntities = allEnemies.concat(allProfits);
 
   allEntities.forEach(entity => {
     if (entity instanceof Enemy) {
-      if (check(player.body, entity.body)) {
-        player.reset();
+      if (check(that.body, entity.body)) {
+        that.reset();
       }
     } else if (entity instanceof Profit) {
-      if (check(player.body, entity.body) && !entity.isGrabbed) {
+      if (check(that.body, entity.body) && !entity.isGrabbed) {
         entity.isGrabbed = true;
-        player.addPoints();
+        that.addPoints();
       }
     }
   });
@@ -184,29 +190,30 @@ Player.prototype.render = function() {
 };
 
 Player.prototype.renderLifes = function(col, row) {
-  for (var i = player.lifes; i > 0; i--) {
+  for (var i = this.lifes; i > 0; i--) {
     ctx.drawImage(Resources.get('images/Heart.png'), 475 - i * 20, 30, 50, 85);
   }
 };
 
 Player.prototype.addPoints = function() {
-  function _addPoints(player, profit) {
+  let that = this;
+  allProfits.forEach(profit => _addPoints(that, profit));
+
+  function _addPoints(that, profit) {
     const profitId = profitSprites.indexOf(profit.sprite);
     if (profitId == 0) {
-      player.score += 10;
+      that.score += 10;
     } else if (profitId == 1) {
-      player.score += 25;
+      that.score += 25;
     } else if (profitId == 2) {
-      player.score += 50;
+      that.score += 50;
     } else if (profitId == profitSprites.length - 1) {
       //life sprite always has last array index
-      player.lifes++;
+      that.lifes++;
     } else if (profitId == 3) {
-      player.hasKey = true;
+      that.hasKey = true;
     }
   }
-  let self = this;
-  allProfits.forEach(profit => _addPoints(self, profit));
 };
 
 // a handleInput() method.
@@ -292,4 +299,16 @@ document.addEventListener('keyup', function(e) {
 
 function generateNum(min, max) {
   return min + Math.floor(Math.random() * max);
+}
+
+function hasPlayerKey() {
+  return player && player.hasKey;
+}
+
+function getPlayerScore() {
+  return player && player.score;
+}
+
+function getPlayerHealth() {
+  return player && player.lifes;
 }
