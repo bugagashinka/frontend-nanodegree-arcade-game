@@ -1,4 +1,3 @@
-const ONE_SECOND = 1000;
 const GAME_OUT_SCORE = 500;
 
 const WORLD_RIGHT_BORDER = 402;
@@ -22,6 +21,7 @@ const PROFIT_OFFSET = { x1: 0, y1: 25, x2: -51, y2: -112 };
 const PROFIT_SIZE = { width: 50, height: 85 };
 const PROFIT_STEP = { x: 101, y: 83 };
 const PROFIT_HEART_OFFSET = { x1: 20, y1: 30, x2: 50, y2: 85 };
+const PROFIT_TIME_RESET = 1000;
 
 const GREEN_GEM_POINTS = 10;
 const BLUE_GEM_POINTS = 25;
@@ -69,7 +69,7 @@ Profit.prototype.showProfit = function(sprites, scope) {
     this.lifeTime = generateNum(2, 4);
     this.show = false;
     this.isGrabbed = false;
-  }, this.lifeTime * ONE_SECOND);
+  }, this.lifeTime * PROFIT_TIME_RESET);
 
   this.x = PROFIT_START_POS.x + PROFIT_STEP.x * generateNum(0, 5);
   this.y = PROFIT_START_POS.y + PROFIT_STEP.y * generateNum(0, 3);
