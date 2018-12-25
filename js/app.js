@@ -188,11 +188,11 @@ Player.prototype.checkCollisions = function() {
 
   allEntities.forEach(entity => {
     if (entity instanceof Enemy) {
-      if (check(that.body, entity.body)) {
+      if (checkBodiesCollide(that.body, entity.body)) {
         that.reset();
       }
     } else if (entity instanceof Profit) {
-      if (check(that.body, entity.body) && !entity.isGrabbed) {
+      if (checkBodiesCollide(that.body, entity.body) && !entity.isGrabbed) {
         entity.isGrabbed = true;
         that.addPoints();
       }
@@ -200,7 +200,7 @@ Player.prototype.checkCollisions = function() {
   });
 };
 
-function check(playerBody, objectBody) {
+function checkBodiesCollide(playerBody, objectBody) {
   return (
     playerBody.x <= objectBody.width &&
     playerBody.width >= objectBody.x &&
